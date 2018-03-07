@@ -30,7 +30,7 @@ namespace Owin.Security.Saml
         /// Key used to save temporary session id
         /// </summary>
         public const string IdpTempSessionKey = "TempIDPId";
-        
+
         /// <summary>
         /// Key used to override <c>ForceAuthn</c> setting
         /// </summary>
@@ -41,7 +41,7 @@ namespace Owin.Security.Saml
         /// </summary>
         public const string IdpIsPassive = "IDPIsPassive";
         private readonly SamlAuthenticationOptions options;
-        
+
         /// <summary>
         /// Constructor for LoginHandler
         /// </summary>
@@ -109,7 +109,7 @@ namespace Owin.Security.Saml
                 }
                 // Flow possible changes
                 ticket = securityTokenValidatedNotification.AuthenticationTicket;
-                context.Authentication.AuthenticationResponseGrant = new AuthenticationResponseGrant(ticket.Identity, ticket.Properties);                
+                context.Authentication.AuthenticationResponseGrant = new AuthenticationResponseGrant(ticket.Identity, ticket.Properties);
                 return ticket;
             }
             catch (Exception ex) {
@@ -144,7 +144,7 @@ namespace Owin.Security.Saml
 
             var authenticationProperties = new AuthenticationProperties
             {
-                ExpiresUtc = assertion.NotOnOrAfter,
+                ExpiresUtc = assertion.Assertion.GetAuthnStatements().Select(authn => authn.SessionNotOnOrAfter).Min(),
                 // IssuedUtc = DateTimeOffset.UtcNow,
                 IsPersistent = true,
                 AllowRefresh = true,
@@ -170,7 +170,7 @@ namespace Owin.Security.Saml
         }
 
         private Task<NameValueCollection> HandleResponse(IOwinContext context)
-        { 
+        {
             Action<Saml20Assertion> loginAction = a => DoSignOn(context, a);
 
             // Some IdP's are known to fail to set an actual value in the SOAPAction header
@@ -218,7 +218,7 @@ namespace Owin.Security.Saml
 
             Utility.HandleSoap(builder, inputStream, configuration, a => DoSignOn(context, a), getFromCache, setInCache, session);
         }
-        
+
         /// <summary>
         /// Handles executing the login.
         /// </summary>
