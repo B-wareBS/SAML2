@@ -192,3 +192,5 @@ FakesAssemblies/
 *.dll
 
 Metadata-Test/
+
+src/.vs/
