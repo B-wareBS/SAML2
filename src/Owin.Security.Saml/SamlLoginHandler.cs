@@ -143,7 +143,7 @@ namespace Owin.Security.Saml
 
             var authenticationProperties = new AuthenticationProperties
             {
-                ExpiresUtc = assertion.Assertion.GetAuthnStatements().Select(authn => authn.SessionNotOnOrAfter).Min(),
+                ExpiresUtc = DetermineExpiration(assertion),
                 // IssuedUtc = DateTimeOffset.UtcNow,
                 IsPersistent = true,
                 AllowRefresh = true,
@@ -165,7 +165,36 @@ namespace Owin.Security.Saml
                     Logger.Error($"Received invalid RelayState from DigiD while authenticating. RelayState={relayState}", e);
                 }
             }
-			return Task.FromResult(new AuthenticationTicket(assertion.ToClaimsIdentity(options.SignInAsAuthenticationType), authenticationProperties));
+            return Task.FromResult(new AuthenticationTicket(assertion.ToClaimsIdentity(options.SignInAsAuthenticationType), authenticationProperties));
+        }
+
+        /// <summary>
+        ///     Determines the expiration date of the given <see cref="Saml20Assertion" />. The result of this method will obey
+        ///     <see cref="SamlAuthenticationOptions.MaxSessionExpiration" />.
+        /// </summary>
+        /// <param name="assertion">The assertion to determine the expiration time of.</param>
+        /// <returns>The experiation time, if any.</returns>
+        private DateTime? DetermineExpiration(Saml20Assertion assertion)
+        {
+            var fromAuthStatements = assertion.Assertion.GetAuthnStatements().Select(authn => authn.SessionNotOnOrAfter).Min();
+            if (options.MaxSessionExpiration.HasValue)
+            {
+                var maxSessionTime = options.MaxSessionExpiration.Value;
+                var now = DateTime.UtcNow;
+                var maxDateTime = DateTime.MaxValue;
+                if (maxDateTime - now < maxSessionTime)
+                {
+                    return maxDateTime;
+                }
+
+                var max = maxDateTime + maxSessionTime;
+                if (fromAuthStatements < max)
+                {
+                    return max;
+                }
+            }
+
+            return fromAuthStatements;
         }
 
         private Task<NameValueCollection> HandleResponse(IOwinContext context)

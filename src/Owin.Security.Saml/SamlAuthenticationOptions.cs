@@ -16,7 +16,7 @@ namespace Owin.Security.Saml
                 AuthenticationType = "SAML2",
                 Caption = "Saml 2.0 Authentication protocol for OWIN"
             };
-			SignInAsAuthenticationType = "SAML2";
+            SignInAsAuthenticationType = "SAML2";
             MetadataPath = "/saml2/metadata";
             LoginPath = "/saml2/login";
             LogoutPath = "/saml2/logout";
@@ -66,14 +66,21 @@ namespace Owin.Security.Saml
         /// </summary>
         public bool RedirectToChallengeUrl { get; set; } = true;
 
-		/// <summary>
-		/// Passthrough property to Description.Caption.
-		/// </summary>
-		public string Caption
-		{
-			get => Description.Caption;
-			set => Description.Caption = value;
-		}
+        /// <summary>
+        ///     Gets or sets a value that will determine the maximum time a session is allowed to last. When this
+        ///	    value is <see langword="null" />, there is no limit.
+        ///	    The default value of this property is <see langword="null" />.
+        /// </summary>
+        public TimeSpan? MaxSessionExpiration { get; set; } = null;
+
+        /// <summary>
+        /// Passthrough property to Description.Caption.
+        /// </summary>
+        public string Caption
+        {
+            get => Description.Caption;
+            set => Description.Caption = value;
+        }
 
 
         /// <summary>
