@@ -71,14 +71,8 @@ namespace Owin.Security.Saml
 		/// </summary>
 		public string Caption
 		{
-			get
-			{
-				return Description.Caption;
-			}
-			set
-			{
-				Description.Caption = value;
-			}
+			get => Description.Caption;
+			set => Description.Caption = value;
 		}
 
 

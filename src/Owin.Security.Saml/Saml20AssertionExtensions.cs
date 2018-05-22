@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace Owin.Security.Saml
 {
-    internal static class Saml20AssertionExtensions 
+    internal static class Saml20AssertionExtensions
     {
         public static ClaimsIdentity ToClaimsIdentity(this Saml20Assertion value, string authenticationType, string nameType = null, string roleType = null)
         {
-            if (value == null) throw new ArgumentNullException("value"); 
+            if (value == null) throw new ArgumentNullException(nameof(value));
             return new ClaimsIdentity(value.Attributes.SelectMany(a => a.ToClaims(value.Issuer)).Concat(ClaimsFromSubject(value.Subject, value.Issuer)), authenticationType, nameType, roleType);
         }
 

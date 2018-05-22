@@ -12,7 +12,7 @@ namespace Owin.Security.Saml
     {
         public static NameValueCollection ToNameValueCollection(this IReadableStringCollection value)
         {
-            if (value == null) throw new ArgumentNullException("value");
+            if (value == null) throw new ArgumentNullException(nameof(value));
             var nvc = new NameValueCollection();
             foreach (var item in value)
                 nvc.Add(item.Key, item.Value.FirstOrDefault());

@@ -11,14 +11,14 @@ namespace Owin.Security.Saml
         [Obsolete("This method joins the attribute value into a comma-delimeted string and should not be used. Use ToClaims instead")]
         public static Claim ToClaim(this SamlAttribute value, string issuer)
         {
-            if (value == null) throw new ArgumentNullException("value");
+            if (value == null) throw new ArgumentNullException(nameof(value));
             // TODO: Find the right answer to the multiple attributevalue question
             return new Claim(value.Name, string.Join(",", value.AttributeValue), value.NameFormat, issuer);
         }
 
         public static IEnumerable<Claim> ToClaims(this SamlAttribute value, string issuer)
         {
-            if (value == null) throw new ArgumentNullException("value");
+            if (value == null) throw new ArgumentNullException(nameof(value));
             return value.AttributeValue.Select(v => new Claim(value.Name, v, value.NameFormat, issuer));
         }
     }

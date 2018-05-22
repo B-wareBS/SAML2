@@ -18,9 +18,10 @@ namespace Owin
         {
             if (app == null)
             {
-                throw new ArgumentNullException("app");
+                throw new ArgumentNullException(nameof(app));
             }
-            if (options == null) throw new ArgumentNullException("options");
+
+            if (options == null) throw new ArgumentNullException(nameof(options));
 
             SAML2.Logging.LoggerProvider.Configuration = SAML2.Logging.LoggerProvider.Configuration ?? options.Configuration;
 

@@ -45,12 +45,11 @@ namespace Owin.Security.Saml
         /// <summary>
         /// Constructor for LoginHandler
         /// </summary>
-        /// <param name="configuration">SamlConfiguration</param>
-        /// <param name="getFromCache">May be null unless doing artifact binding, this function will be called for artifact resolution</param>
+        /// <param name="options">The authentication options.</param>
         public SamlLoginHandler(SamlAuthenticationOptions options)
             : base(options.Configuration)
         {
-            if (options == null) throw new ArgumentNullException("options");
+            if (options == null) throw new ArgumentNullException(nameof(options));
             this.options = options;
             getFromCache = options.GetFromCache;
             setInCache = options.SetInCache;

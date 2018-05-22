@@ -23,7 +23,7 @@ namespace Owin.Security.Saml
         public SamlLogoutHandler(SamlAuthenticationOptions options)
             : base(options.Configuration)
         {
-            if (options == null) throw new ArgumentNullException("options");
+            if (options == null) throw new ArgumentNullException(nameof(options));
             this.options = options;
         }
 
