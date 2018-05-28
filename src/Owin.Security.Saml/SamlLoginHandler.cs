@@ -184,11 +184,13 @@ namespace Owin.Security.Saml
                 var maxDateTime = DateTime.MaxValue;
                 if (maxDateTime - now < maxSessionTime)
                 {
+                    // If now + maxDateTime is unrepresentable, let's just return the maximum value.
                     return maxDateTime;
                 }
 
-                var max = maxDateTime + maxSessionTime;
-                if (fromAuthStatements < max)
+                // The maximum.
+                var max = now + maxSessionTime;
+                if (max < fromAuthStatements || !fromAuthStatements.HasValue)
                 {
                     return max;
                 }
